@@ -3,37 +3,341 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NosamiDev</title>
+<title>NosamiDev — Android apps</title>
+<meta name="description" content="Simple, private Android apps by NosamiDev: Draw Together, Digit Duel and BeatDown. No accounts, made with care.">
+<meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121418" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NosamiDev">
+<meta property="og:title" content="NosamiDev — Android apps">
+<meta property="og:description" content="Simple, private Android apps — no accounts, made with care.">
+<meta property="og:url" content="https://nosamidev.github.io/">
+<meta property="og:image" content="https://nosamidev.github.io/assets/beatdown/icon.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" href="assets/digitduel/icon.png">
+<link rel="apple-touch-icon" href="assets/digitduel/icon.png">
 <style>
-  :root { color-scheme: light dark; }
+  :root {
+    color-scheme: light dark;
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --surface-2: #eef0f4;
+    --text: #1a1d23;
+    --muted: #535a66;
+    --border: #dfe2e8;
+    --accent: #01875f;          /* Play-style green, 4.9:1 on white */
+    --accent-text: #ffffff;
+    --link: #0b57d0;
+    --chip-bg: #e6f4ee;
+    --chip-text: #0a5c41;
+    --soon-bg: #fff1d6;
+    --soon-text: #7a4a00;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 4px 16px rgba(16, 24, 40, .06);
+    --radius: 20px;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121418;
+      --surface: #1b1e24;
+      --surface-2: #252932;
+      --text: #e8eaee;
+      --muted: #a6adba;
+      --border: #2e333d;
+      --accent: #4cd39a;
+      --accent-text: #062b1c;
+      --link: #8ab4ff;
+      --chip-bg: #183a2c;
+      --chip-text: #9fe8c6;
+      --soon-bg: #3d2f12;
+      --soon-text: #ffd58a;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background: #f6f7f9;
-    color: #1d2330;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    line-height: 1.5;
+    overflow-x: hidden;
   }
-  main { text-align: center; padding: 2rem; }
-  h1 { font-size: 2.5rem; margin: 0 0 0.5rem; letter-spacing: -0.02em; }
-  p { margin: 0.5rem 0; font-size: 1.1rem; }
-  a { color: #2b5fd9; text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .contact { margin-top: 1.5rem; font-size: 0.95rem; opacity: 0.8; }
-  @media (prefers-color-scheme: dark) {
-    body { background: #14171d; color: #e6e8ec; }
-    a { color: #7fa6ff; }
+  a { color: var(--link); }
+  a:focus-visible, .btn:focus-visible, .shots:focus-visible {
+    outline: 3px solid var(--link);
+    outline-offset: 2px;
   }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  header { padding: 56px 0 28px; }
+  .wordmark {
+    margin: 0;
+    font-size: clamp(2.2rem, 7vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+  .wordmark span { color: var(--accent); }
+  .tagline { margin: 10px 0 20px; font-size: 1.125rem; color: var(--muted); max-width: 36ch; }
+  .header-links { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  .pill:hover { border-color: var(--muted); }
+  .pill svg { width: 18px; height: 18px; flex: none; }
+
+  /* Apps */
+  main { padding-bottom: 40px; }
+  .section-title { font-size: 1.25rem; font-weight: 700; margin: 12px 0 16px; }
+  .apps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  @media (min-width: 900px) { .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .card {
+    min-width: 0;
+    display: flex; flex-direction: column; gap: 16px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .card-head { display: flex; gap: 16px; align-items: flex-start; }
+  .icon {
+    width: 72px; height: 72px; flex: none;
+    border-radius: 18px;
+    background: var(--surface-2);
+    box-shadow: 0 0 0 1px var(--border);
+  }
+  .meta { min-width: 0; }
+  .title-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  .card h3 { margin: 0; font-size: 1.15rem; line-height: 1.3; overflow-wrap: anywhere; }
+  .desc { margin: 4px 0 8px; color: var(--muted); font-size: .95rem; }
+  .chip, .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: .78rem; font-weight: 600;
+  }
+  .chip { background: var(--chip-bg); color: var(--chip-text); }
+  .badge { background: var(--soon-bg); color: var(--soon-text); }
+
+  .shots {
+    display: flex; gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    padding-bottom: 6px;
+    margin: 0 -4px;
+    padding-left: 4px; padding-right: 4px;
+    scrollbar-width: thin;
+  }
+  .shots img {
+    height: 240px; width: auto;
+    flex: none;
+    scroll-snap-align: start;
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+  }
+  @media (max-width: 420px) { .shots img { height: 210px; } }
+
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: auto; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-text);
+    font-weight: 700; font-size: .95rem;
+    text-decoration: none;
+    border: 0;
+  }
+  .btn:hover { filter: brightness(1.06); }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .btn[aria-disabled="true"] {
+    background: var(--surface-2);
+    color: var(--muted);
+    cursor: not-allowed;
+    filter: none;
+  }
+  .legal { display: flex; flex-wrap: wrap; gap: 4px 0; font-size: .875rem; color: var(--muted); }
+  .legal a { color: var(--muted); text-underline-offset: 2px; }
+  .legal a:hover { color: var(--text); }
+  .legal span[aria-hidden] { padding: 0 6px; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: .9rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--text); }
+  footer nav { display: flex; flex-wrap: wrap; gap: 8px 20px; }
 </style>
 </head>
 <body>
+<header>
+  <div class="wrap">
+    <h1 class="wordmark">Nosami<span>Dev</span></h1>
+    <p class="tagline">Simple, private Android apps — no accounts, made with care.</p>
+    <div class="header-links">
+      <a class="pill" href="https://play.google.com/store/apps/developer?id=KaylorGem">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.5 2.6c-.3.3-.5.8-.5 1.4v16c0 .6.2 1.1.5 1.4l9-9.4-9-9.4Zm10.4 10.9 2.4 2.5-10.9 6.2 8.5-8.7Zm3.7-3.5 2.6 1.5c.9.5.9 1.4 0 2l-2.6 1.4-2.7-2.9 2.7-2Zm-11.7-8.2 10.9 6.2-2.4 2.5-8.5-8.7Z"/></svg>
+        All apps on Google Play
+      </a>
+      <a class="pill" href="mailto:nosami.dev.21@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 6h18v12H3zM3 7l9 7 9-7"/></svg>
+        Contact
+      </a>
+    </div>
+  </div>
+</header>
+
 <main>
-  <h1>NosamiDev</h1>
-  <p>Apps by NosamiDev</p>
-  <p><a href="https://nosamidev.github.io/Nosami-Apps/">Privacy &amp; Terms</a></p>
-  <p class="contact">Contact: <a href="mailto:nosami.dev.21@gmail.com">nosami.dev.21@gmail.com</a></p>
+  <div class="wrap">
+    <h2 class="section-title">Apps</h2>
+    <div class="apps" id="apps"></div>
+    <noscript><p>Turn on JavaScript to see the app list, or browse <a href="https://play.google.com/store/apps/developer?id=KaylorGem">all apps on Google Play</a>.</p></noscript>
+  </div>
 </main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> NosamiDev</span>
+    <nav aria-label="Footer">
+      <a href="https://nosamidev.github.io/Nosami-Apps/">Privacy &amp; Terms for all apps</a>
+      <a href="mailto:nosami.dev.21@gmail.com">nosami.dev.21@gmail.com</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/*
+ * APPS — one entry per app; the cards are built from this list, in this order.
+ *
+ * To add an app: put its files in assets/<slug>/ (icon.png + shot-1.webp … shot-4.webp)
+ * and add one object below.
+ *
+ * To launch a "soon" app: change  status: "soon"  to  status: "live".
+ * That removes the "Coming soon" badge and turns on the "Get it on Google Play" button
+ * (it links to https://play.google.com/store/apps/details?id=<pkg>).
+ */
+const APPS = [
+  {
+    slug: "drawtogether",
+    title: "Draw Together: Co-Draw",
+    desc: "Real-time drawing game for two. Share a canvas and create together.",
+    category: "Art & Design",
+    pkg: "com.coupledraw.app",
+    status: "live",
+    links: {
+      privacy: "https://nosamidev.github.io/Nosami-Apps/privacy.html",
+      terms: "https://nosamidev.github.io/Nosami-Apps/draw-together-terms.html"
+    }
+  },
+  {
+    slug: "digitduel",
+    title: "Digit Duel : Code Breaker Game",
+    desc: "Online number guessing game: crack your rival's secret code first!",
+    category: "Puzzle",
+    pkg: "com.digitduel_numberguessing.app",
+    status: "live",
+    links: {
+      privacy: "https://nosamidev.github.io/Nosami-Apps/digitduel-privacy.html",
+      terms: "https://nosamidev.github.io/Nosami-Apps/digitduel-terms.html",
+      deleteAccount: "https://nosamidev.github.io/Nosami-Apps/digitduel-delete-account.html"
+    }
+  },
+  {
+    slug: "beatdown",
+    title: "BeatDown",
+    desc: "Big countdown timer with focus beats – for study, exams, work & workouts",
+    category: "Productivity",
+    pkg: "com.kaylorgem.beatdown",
+    status: "soon",
+    links: {
+      privacy: "https://nosamidev.github.io/Nosami-Apps/Timebeat-privacy.html",
+      terms: "https://nosamidev.github.io/Nosami-Apps/Timebeat-terms.html"
+    }
+  }
+];
+
+const SHOT_COUNT = 4;
+const LINK_LABELS = { privacy: "Privacy", terms: "Terms", deleteAccount: "Delete account" };
+const PLAY_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.5 2.6c-.3.3-.5.8-.5 1.4v16c0 .6.2 1.1.5 1.4l9-9.4-9-9.4Zm10.4 10.9 2.4 2.5-10.9 6.2 8.5-8.7Zm3.7-3.5 2.6 1.5c.9.5.9 1.4 0 2l-2.6 1.4-2.7-2.9 2.7-2Zm-11.7-8.2 10.9 6.2-2.4 2.5-8.5-8.7Z"/></svg>';
+
+function el(tag, attrs, children) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "text") node.textContent = v;
+    else node.setAttribute(k, v);
+  }
+  for (const c of children || []) node.append(c);
+  return node;
+}
+
+function renderApp(app) {
+  const live = app.status === "live";
+  const titleId = "app-" + app.slug;
+
+  const titleRow = el("div", { class: "title-row" }, [el("h3", { id: titleId, text: app.title })]);
+  if (!live) titleRow.append(el("span", { class: "badge", text: "Coming soon" }));
+
+  const head = el("div", { class: "card-head" }, [
+    el("img", { class: "icon", src: `assets/${app.slug}/icon.png`, alt: `${app.title} app icon`, width: "72", height: "72" }),
+    el("div", { class: "meta" }, [
+      titleRow,
+      el("p", { class: "desc", text: app.desc }),
+      el("span", { class: "chip", text: app.category })
+    ])
+  ]);
+
+  const shots = el("div", { class: "shots", tabindex: "0", role: "region", "aria-label": `${app.title} screenshots` });
+  for (let i = 1; i <= SHOT_COUNT; i++) {
+    shots.append(el("img", {
+      src: `assets/${app.slug}/shot-${i}.webp`,
+      alt: `${app.title} screenshot ${i} of ${SHOT_COUNT}`,
+      loading: "lazy",
+      decoding: "async",
+      height: "720"
+    }));
+  }
+
+  let btn;
+  if (live) {
+    btn = el("a", { class: "btn", href: `https://play.google.com/store/apps/details?id=${app.pkg}` });
+  } else {
+    btn = el("span", { class: "btn", role: "link", "aria-disabled": "true", title: "Coming soon to Google Play" });
+  }
+  btn.innerHTML = PLAY_ICON;
+  btn.append("Get it on Google Play");
+
+  const legal = el("nav", { class: "legal", "aria-label": `${app.title} legal` });
+  Object.entries(app.links).forEach(([key, url], i) => {
+    if (i > 0) legal.append(el("span", { "aria-hidden": "true", text: "·" }));
+    legal.append(el("a", { href: url, text: LINK_LABELS[key] || key }));
+  });
+
+  return el("article", { class: "card", "aria-labelledby": titleId }, [
+    head, shots, el("div", { class: "actions" }, [btn, legal])
+  ]);
+}
+
+document.getElementById("apps").append(...APPS.map(renderApp));
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
